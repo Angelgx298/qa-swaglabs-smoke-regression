@@ -73,5 +73,5 @@ pnpm test:report
 **Ángel Ruiz Nadal**  
 Junior QA Engineer
 
-📧 [angelruiznadal@gmail.com]  
+📨 [Contact email](angelruiznadal@gmail.com)  
 💼 [LinkedIn](https://linkedin.com/in/angel-ruiz-nadal)
