@@ -70,7 +70,7 @@ pnpm test:report
 
 ## 👤 Author
 
-**Ángel Ruiz Nadal**  
+**Ángel Ruiz Nadal**  [Contact email]()
 Junior QA Engineer
 
 📨 angelruiznadal@gmail.com  
