@@ -1,0 +1,1 @@
+# qa-swaglabs-smoke-regression
