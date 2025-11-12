@@ -1,82 +1,133 @@
 # Smoke Test Suite – Sauce Demo
 
-### SMK-001
+## Test Cases
 
-    ID: SMK-001
-    Module: Login
-    Priority: High
-    Data: user=standard_user, pass=secret_sauce
-    Steps: 1) Open saucedemo.com 2) Enter creds 3) Click Login
-    Expected: Inventory page loads (URL contains /inventory).
+### SMK-001: Login with valid user
 
-### SMK-002
+- **Module**: Login
+- **Priority**: High
+- **Test Data**: user=standard_user, pass=secret_sauce
+- **Steps**:
+  1. Open saucedemo.com
+  2. Enter credentials
+  3. Click Login
+- **Expected Result**: Inventory page loads (URL contains `/inventory`)
 
-    ID: SMK-002
-    Module: Login
-    Priority: High
-    Data: user=locked_out_user, pass=secret_sauce
-    Steps: 1) Open 2) Enter creds 3) Login
-    Expected: Error message displayed; stays on login.
+---
 
-### SMK-003
+### SMK-002: Login with locked user
 
-    ID: SMK-003
-    Module: Inventory – Sort
-    Priority: High
-    Data: none
-    Steps: 1) Login as standard_user 2) Sort by Price (low to high)
-    Expected: First item has lowest price; last has highest.
+- **Module**: Login
+- **Priority**: High
+- **Test Data**: user=locked_out_user, pass=secret_sauce
+- **Steps**:
+  1. Open saucedemo.com
+  2. Enter locked user credentials
+  3. Click Login
+- **Expected Result**: Error message "Epic sadface" displayed; remains on login page
 
-### SMK-004
+---
 
-    ID: SMK-004
-    Module: Inventory – Sort
-    Priority: Medium
-    Data: none
-    Steps: 1) Login 2) Sort by Name (Z to A)
-    Expected: Items listed in reverse alphabetical order.
+### SMK-003: Sort by price (low to high)
 
-### SMK-005
+- **Module**: Inventory – Sort
+- **Priority**: High
+- **Test Data**: None
+- **Steps**:
+  1. Login as standard_user
+  2. Select sort by Price (low to high)
+- **Expected Result**: Items displayed with lowest price first, highest price last
 
-    ID: SMK-005
-    Module: Cart – Add from List
-    Priority: High
-    Data: 1 product
-    Steps: 1) Login 2) Add product from list 3) Check cart icon
-    Expected: Cart badge increments to 1.
+---
 
-### SMK-006
+### SMK-004: Sort by name (Z to A)
 
-    ID: SMK-006
-    Module: Cart – Add from PDP
-    Priority: Medium
-    Data: 1 product via PDP
-    Steps: 1) Login 2) Open product 3) Add to cart 4) Open cart
-    Expected: Product present in cart with correct name/price.
+- **Module**: Inventory – Sort
+- **Priority**: Medium
+- **Test Data**: None
+- **Steps**:
+  1. Login as standard_user
+  2. Select sort by Name (Z to A)
+- **Expected Result**: Items listed in reverse alphabetical order
 
-### SMK-007
+---
 
-    ID: SMK-007
-    Module: Checkout – Happy Path
-    Priority: High
-    Data: Valid first/last name, zip
-    Steps: 1) Login 2) Add item 3) Open cart 4) Checkout 5) Fill data 6) Finish
-    Expected: Order confirmation screen displayed.
+### SMK-005: Add to cart from list
 
-### SMK-008
+- **Module**: Cart – Add from List
+- **Priority**: High
+- **Test Data**: 1 product from inventory list
+- **Steps**:
+  1. Login as standard_user
+  2. Click "Add to cart" on any product from list
+  3. Check cart badge
+- **Expected Result**: Cart badge increments to 1
 
-    ID: SMK-008
-    Module: Checkout – Cancel
-    Priority: Medium
-    Data: 1 item in cart
-    Steps: 1) Login 2) Add item 3) Start checkout 4) Cancel
-    Expected: Return to inventory; cart preserved.
+---
 
-### SMK-009
+### SMK-006: Add to cart from PDP
 
-    ID: SMK-009
-    Module: Session – Logout
-    Priority: High
-    Data: none
-    Steps: 1) Login 2) Logout via menu
-    Expected: Back to login; session invalidated.
+- **Module**: Cart – Add from PDP
+- **Priority**: Medium
+- **Test Data**: 1 product via Product Detail Page
+- **Steps**:
+  1. Login as standard_user
+  2. Click on product name to open detail page
+  3. Click "Add to cart"
+  4. Open cart
+- **Expected Result**: Product present in cart with correct name and price
+
+---
+
+### SMK-007: Checkout happy path
+
+- **Module**: Checkout – Happy Path
+- **Priority**: High
+- **Test Data**: firstName=Test, lastName=User, zipCode=12345
+- **Steps**:
+  1. Login as standard_user
+  2. Add any item to cart
+  3. Open cart
+  4. Click Checkout
+  5. Fill customer information
+  6. Click Continue
+  7. Click Finish
+- **Expected Result**: Order confirmation screen displayed with "Thank you for your order"
+
+---
+
+### SMK-008: Cancel checkout
+
+- **Module**: Checkout – Cancel
+- **Priority**: Medium
+- **Test Data**: 1 item in cart
+- **Steps**:
+  1. Login as standard_user
+  2. Add item to cart
+  3. Open cart
+  4. Click Checkout
+  5. Click Cancel
+- **Expected Result**: Returns to cart page; cart preserved with 1 item
+
+---
+
+### SMK-009: Logout
+
+- **Module**: Session – Logout
+- **Priority**: High
+- **Test Data**: None
+- **Steps**:
+  1. Login as standard_user
+  2. Open menu
+  3. Click Logout
+  4. Attempt to access inventory.html directly
+- **Expected Result**: Redirected to login page; session invalidated
+
+---
+
+## Summary
+
+- **Total**: 9 test cases
+- **High Priority**: 6
+- **Medium Priority**: 3
+- **Automation Status**: 9/9 automated (Playwright)
