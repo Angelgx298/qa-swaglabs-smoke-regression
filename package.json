@@ -1,7 +1,7 @@
 {
   "name": "qa-swaglabs-smoke-regression",
   "version": "1.0.0",
-  "description": "",
+  "description": "QA portfolio project demonstrating professional test automation practices with Playwright and TypeScript. Includes comprehensive smoke test suite for Sauce Demo e-commerce application with CI/CD integration.",
   "main": "index.js",
   "scripts": {
     "test": "playwright test",
@@ -9,8 +9,19 @@
     "test:ui": "playwright test --ui",
     "test:report": "playwright show-report"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "qa",
+    "quality-assurance",
+    "testing",
+    "playwright",
+    "typescript",
+    "e2e-testing",
+    "test-automation",
+    "smoke-tests",
+    "ci-cd",
+    "portfolio"
+  ],
+  "author": "Ángel Ruiz Nadal <angelruiznadal@gmail.com>",
   "license": "ISC",
   "packageManager": "pnpm@10.20.0",
   "devDependencies": {
