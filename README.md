@@ -58,7 +58,7 @@ The project includes complete smoke test coverage for critical user journeys, al
 | **Language**        | [TypeScript](https://www.typescriptlang.org/) 5.x     | Type-safe test code                    |
 | **Package Manager** | [pnpm](https://pnpm.io/) 10.x                         | Fast, efficient dependency management  |
 | **CI/CD**           | [GitHub Actions](https://github.com/features/actions) | Automated test execution on every push |
-| **Browser**         | Chromium (via Playwright)                             | Test execution environment             |
+| **Browser**         | Chromium, Firefox, WebKit                             | Cross-browser test execution           |
 
 **Why Playwright?**
 
@@ -94,7 +94,7 @@ Ensure you have the following installed:
 
 3. **Install Playwright browsers**
    ```bash
-   pnpm exec playwright install --with-deps chromium
+   pnpm exec playwright install --with-deps
    ```
 
 ### Running Tests
