@@ -1,20 +1,23 @@
 {
-  "root": true,
-  "parser": "@typescript-eslint/parser",
-  "plugins": ["@typescript-eslint", "playwright"],
-  "extends": [
-    "eslint:recommended",
-    "plugin:@typescript-eslint/recommended",
-    "plugin:playwright/recommended"
-  ],
-  "rules": {
-    "@typescript-eslint/no-unused-vars": [
-      "error",
-      {
-        "argsIgnorePattern": "^_"
-      }
+    "root": true,
+    "parser": "@typescript-eslint/parser",
+    "plugins": [
+        "@typescript-eslint",
+        "playwright"
     ],
-    "@typescript-eslint/no-explicit-any": "warn",
-    "playwright/expect-expect": "off"
-  }
+    "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:playwright/recommended"
+    ],
+    "rules": {
+        "@typescript-eslint/no-unused-vars": [
+            "error",
+            {
+                "argsIgnorePattern": "^_"
+            }
+        ],
+        "@typescript-eslint/no-explicit-any": "warn",
+        "playwright/expect-expect": "off"
+    }
 }
