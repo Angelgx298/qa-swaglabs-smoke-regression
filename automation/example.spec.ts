@@ -103,10 +103,10 @@ test("SMK-006: Add to cart from PDP shows product in cart", async ({ page }) => 
 
   // Go to cart
   await inventoryPage.goToCart();
-  
+
   const cartPage = new CartPage(page);
   await cartPage.verifyLoaded();
-  
+
   await expect(page.locator(".cart_item_label")).toContainText(firstItemName!);
   await expect(page.locator(".inventory_item_price")).toContainText(firstItemPrice!);
 });
@@ -141,7 +141,7 @@ test("SMK-008: Cancel checkout returns to cart with cart preserved", async ({ pa
   await loginPage.goto();
   await loginPage.login(CREDENTIALS.standard.username, CREDENTIALS.standard.password);
   await inventoryPage.addItemToCart(0);
-  
+
   await expect(inventoryPage.cartBadge).toHaveText("1");
 
   await inventoryPage.goToCart();
@@ -168,6 +168,6 @@ test("SMK-009: Logout returns to login and invalidates session", async ({ page }
   await expect(loginPage.usernameInput).toBeVisible();
 
   // Verify session invalidation
-  await page.goto("https://www.saucedemo.com/inventory.html");
+  await page.goto("/inventory.html");
   await expect(page).toHaveURL("https://www.saucedemo.com/");
 });

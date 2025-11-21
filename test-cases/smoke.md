@@ -19,13 +19,13 @@ This document contains the complete smoke test suite for the Sauce Demo e-commer
 
 ### Module Distribution
 
-| Module              | Test Cases | Automation File                    |
-| ------------------- | ---------- | ---------------------------------- |
-| Login & Auth        | 2          | `automation/example.spec.ts:58-71` |
-| Inventory Sorting   | 2          | `automation/example.spec.ts:73-108`|
-| Shopping Cart       | 2          | `automation/example.spec.ts:110-141`|
-| Checkout Flow       | 2          | `automation/example.spec.ts:143-179`|
-| Session Management  | 1          | `automation/example.spec.ts:181-194`|
+| Module             | Test Cases | Automation File                      |
+| ------------------ | ---------- | ------------------------------------ |
+| Login & Auth       | 2          | `automation/example.spec.ts:58-71`   |
+| Inventory Sorting  | 2          | `automation/example.spec.ts:73-108`  |
+| Shopping Cart      | 2          | `automation/example.spec.ts:110-141` |
+| Checkout Flow      | 2          | `automation/example.spec.ts:143-179` |
+| Session Management | 1          | `automation/example.spec.ts:181-194` |
 
 ---
 
@@ -40,20 +40,24 @@ This document contains the complete smoke test suite for the Sauce Demo e-commer
 **Objective**: Verify that valid users can successfully authenticate and access the application
 
 **Prerequisites**:
+
 - Application is accessible at https://www.saucedemo.com/
 - User account `standard_user` is active
 
 **Test Data**:
+
 - Username: `standard_user`
 - Password: `secret_sauce`
 
 **Steps**:
+
 1. Navigate to https://www.saucedemo.com/
 2. Enter username: `standard_user`
 3. Enter password: `secret_sauce`
 4. Click the **Login** button
 
 **Expected Result**:
+
 - User is redirected to inventory page
 - URL contains `/inventory`
 - Product inventory list is visible
@@ -70,19 +74,23 @@ This document contains the complete smoke test suite for the Sauce Demo e-commer
 **Objective**: Verify that locked users cannot access the application and receive appropriate error messaging
 
 **Prerequisites**:
+
 - Application is accessible at https://www.saucedemo.com/
 
 **Test Data**:
+
 - Username: `locked_out_user`
 - Password: `secret_sauce`
 
 **Steps**:
+
 1. Navigate to https://www.saucedemo.com/
 2. Enter username: `locked_out_user`
 3. Enter password: `secret_sauce`
 4. Click the **Login** button
 
 **Expected Result**:
+
 - Error message displayed: "Epic sadface: Sorry, this user has been locked out."
 - User remains on login page
 - URL remains at base `/` path
@@ -99,18 +107,21 @@ This document contains the complete smoke test suite for the Sauce Demo e-commer
 **Objective**: Verify product sorting functionality correctly orders items by ascending price
 
 **Prerequisites**:
+
 - User is logged in as `standard_user`
 - Inventory page is loaded
 
 **Test Data**: None
 
 **Steps**:
+
 1. Login as `standard_user`
 2. On inventory page, click sort dropdown
 3. Select "Price (low to high)" option
 4. Observe product order
 
 **Expected Result**:
+
 - Products are reordered by price
 - Lowest priced item appears first
 - Highest priced item appears last
@@ -127,18 +138,21 @@ This document contains the complete smoke test suite for the Sauce Demo e-commer
 **Objective**: Verify product sorting functionality correctly orders items in reverse alphabetical order
 
 **Prerequisites**:
+
 - User is logged in as `standard_user`
 - Inventory page is loaded
 
 **Test Data**: None
 
 **Steps**:
+
 1. Login as `standard_user`
 2. On inventory page, click sort dropdown
 3. Select "Name (Z to A)" option
 4. Observe product order
 
 **Expected Result**:
+
 - Products are reordered alphabetically in reverse
 - Item starting with 'T' appears first
 - Item starting with 'B' appears last
@@ -155,18 +169,21 @@ This document contains the complete smoke test suite for the Sauce Demo e-commer
 **Objective**: Verify users can add products to cart directly from inventory list view
 
 **Prerequisites**:
+
 - User is logged in as `standard_user`
 - Cart is empty (badge not visible or shows "0")
 
 **Test Data**: Any single product from inventory list
 
 **Steps**:
+
 1. Login as `standard_user`
 2. On inventory page, locate any product
 3. Click **Add to cart** button on product card
 4. Observe cart badge in header
 
 **Expected Result**:
+
 - Cart badge appears in top-right corner
 - Badge displays "1"
 - Button text changes to "Remove"
@@ -183,12 +200,14 @@ This document contains the complete smoke test suite for the Sauce Demo e-commer
 **Objective**: Verify users can add products to cart from the Product Detail Page (PDP)
 
 **Prerequisites**:
+
 - User is logged in as `standard_user`
 - Cart is empty
 
 **Test Data**: Any single product
 
 **Steps**:
+
 1. Login as `standard_user`
 2. On inventory page, click on any product **name** or **image**
 3. Verify Product Detail Page loads (URL contains `/inventory-item`)
@@ -197,6 +216,7 @@ This document contains the complete smoke test suite for the Sauce Demo e-commer
 6. Verify cart page loads
 
 **Expected Result**:
+
 - Product appears in cart with correct:
   - Product name
   - Product price
@@ -215,15 +235,18 @@ This document contains the complete smoke test suite for the Sauce Demo e-commer
 **Objective**: Verify users can successfully complete an order from cart to confirmation
 
 **Prerequisites**:
+
 - User is logged in as `standard_user`
 - At least one product in cart
 
 **Test Data**:
+
 - First Name: `Test`
 - Last Name: `User`
 - Zip/Postal Code: `12345`
 
 **Steps**:
+
 1. Login as `standard_user`
 2. Add any item to cart
 3. Click cart icon and verify cart page loads
@@ -237,6 +260,7 @@ This document contains the complete smoke test suite for the Sauce Demo e-commer
 8. Click **Finish** button
 
 **Expected Result**:
+
 - Order confirmation page displays (URL: `/checkout-complete`)
 - Success message appears: "Thank you for your order"
 - Pony Express icon displayed
@@ -253,12 +277,14 @@ This document contains the complete smoke test suite for the Sauce Demo e-commer
 **Objective**: Verify users can cancel checkout and return to cart without losing items
 
 **Prerequisites**:
+
 - User is logged in as `standard_user`
 - At least one product in cart
 
 **Test Data**: Any single product
 
 **Steps**:
+
 1. Login as `standard_user`
 2. Add one item to cart
 3. Click cart icon
@@ -266,6 +292,7 @@ This document contains the complete smoke test suite for the Sauce Demo e-commer
 5. On checkout information page, click **Cancel** button
 
 **Expected Result**:
+
 - User is redirected back to cart page (URL: `/cart.html`)
 - Cart still contains the item (not cleared)
 - Cart badge still displays "1"
@@ -282,11 +309,13 @@ This document contains the complete smoke test suite for the Sauce Demo e-commer
 **Objective**: Verify logout functionality properly terminates user session
 
 **Prerequisites**:
+
 - User is logged in as `standard_user`
 
 **Test Data**: None
 
 **Steps**:
+
 1. Login as `standard_user`
 2. Click hamburger menu (☰) in top-left corner
 3. Click **Logout** link in menu
@@ -294,6 +323,7 @@ This document contains the complete smoke test suite for the Sauce Demo e-commer
 5. Attempt to directly access `/inventory.html` via URL
 
 **Expected Result**:
+
 - User is logged out and redirected to login page
 - Login form is visible (username/password fields)
 - Session is invalidated
@@ -305,6 +335,7 @@ This document contains the complete smoke test suite for the Sauce Demo e-commer
 ## Test Execution Notes
 
 ### Environment
+
 - **Browser**: Chromium (via Playwright)
 - **Base URL**: https://www.saucedemo.com/
 - **Test Runner**: Playwright Test
@@ -313,6 +344,7 @@ This document contains the complete smoke test suite for the Sauce Demo e-commer
 ### Test Data
 
 All test credentials are publicly available test accounts:
+
 - Standard user: `standard_user` / `secret_sauce`
 - Locked user: `locked_out_user` / `secret_sauce`
 
@@ -323,6 +355,7 @@ Each test case has a 1:1 mapping to an automated test in `automation/example.spe
 ### Dependencies
 
 Tests are designed to be **independent** and can run in any order. Each test:
+
 - Starts with a fresh browser context
 - Performs its own login (if needed)
 - Does not rely on state from previous tests

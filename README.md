@@ -40,27 +40,28 @@ The project includes complete smoke test coverage for critical user journeys, al
 
 ### Test Suite Breakdown
 
-| Module              | Test Cases | Priority    | Automation Status | Coverage |
-| ------------------- | ---------- | ----------- | ----------------- | -------- |
-| Login & Auth        | 2          | High        | ✅ Automated      | 100%     |
-| Inventory Sorting   | 2          | High/Medium | ✅ Automated      | 100%     |
-| Shopping Cart       | 2          | High/Medium | ✅ Automated      | 100%     |
-| Checkout Flow       | 2          | High/Medium | ✅ Automated      | 100%     |
-| Session Management  | 1          | High        | ✅ Automated      | 100%     |
+| Module             | Test Cases | Priority    | Automation Status | Coverage |
+| ------------------ | ---------- | ----------- | ----------------- | -------- |
+| Login & Auth       | 2          | High        | ✅ Automated      | 100%     |
+| Inventory Sorting  | 2          | High/Medium | ✅ Automated      | 100%     |
+| Shopping Cart      | 2          | High/Medium | ✅ Automated      | 100%     |
+| Checkout Flow      | 2          | High/Medium | ✅ Automated      | 100%     |
+| Session Management | 1          | High        | ✅ Automated      | 100%     |
 
 📄 [View detailed test cases →](./test-cases/smoke.md)
 
 ## 🛠️ Technology Stack
 
-| Category           | Technology                                                      | Purpose                                 |
-| ------------------ | --------------------------------------------------------------- | --------------------------------------- |
-| **Test Framework** | [Playwright](https://playwright.dev/) v1.56+                   | E2E browser automation                  |
-| **Language**       | [TypeScript](https://www.typescriptlang.org/) 5.x              | Type-safe test code                     |
-| **Package Manager**| [pnpm](https://pnpm.io/) 10.x                                  | Fast, efficient dependency management   |
-| **CI/CD**          | [GitHub Actions](https://github.com/features/actions)          | Automated test execution on every push  |
-| **Browser**        | Chromium (via Playwright)                                       | Test execution environment              |
+| Category            | Technology                                            | Purpose                                |
+| ------------------- | ----------------------------------------------------- | -------------------------------------- |
+| **Test Framework**  | [Playwright](https://playwright.dev/) v1.56+          | E2E browser automation                 |
+| **Language**        | [TypeScript](https://www.typescriptlang.org/) 5.x     | Type-safe test code                    |
+| **Package Manager** | [pnpm](https://pnpm.io/) 10.x                         | Fast, efficient dependency management  |
+| **CI/CD**           | [GitHub Actions](https://github.com/features/actions) | Automated test execution on every push |
+| **Browser**         | Chromium (via Playwright)                             | Test execution environment             |
 
 **Why Playwright?**
+
 - Cross-browser support (Chromium, Firefox, WebKit)
 - Fast and reliable test execution
 - Modern web testing features (auto-wait, network interception)
@@ -72,18 +73,21 @@ The project includes complete smoke test coverage for critical user journeys, al
 ### Prerequisites
 
 Ensure you have the following installed:
+
 - **Node.js** 20.x or higher ([Download](https://nodejs.org/))
 - **pnpm** 10.x or higher (install via `npm install -g pnpm`)
 
 ### Installation
 
 1. **Clone the repository**
+
    ```bash
    git clone https://github.com/Angelgx298/qa-swaglabs-smoke-regression.git
    cd qa-swaglabs-smoke-regression
    ```
 
 2. **Install dependencies**
+
    ```bash
    pnpm install
    ```
@@ -96,21 +100,25 @@ Ensure you have the following installed:
 ### Running Tests
 
 #### Execute all tests
+
 ```bash
 SAUCE_USER=standard_user SAUCE_PASS=secret_sauce pnpm test
 ```
 
 #### Run tests in headed mode (watch browser)
+
 ```bash
 SAUCE_USER=standard_user SAUCE_PASS=secret_sauce pnpm test:headed
 ```
 
 #### Run tests in UI mode (interactive)
+
 ```bash
 SAUCE_USER=standard_user SAUCE_PASS=secret_sauce pnpm test:ui
 ```
 
 #### View HTML test report
+
 ```bash
 pnpm test:report
 ```
@@ -125,6 +133,11 @@ qa-swaglabs-smoke-regression/
 │   └── workflows/
 │       └── playwright.yml      # CI/CD pipeline configuration
 ├── automation/
+│   ├── pages/                  # Page Object Model classes
+│   │   ├── LoginPage.ts
+│   │   ├── InventoryPage.ts
+│   │   ├── CartPage.ts
+│   │   └── CheckoutPage.ts
 │   └── example.spec.ts         # Playwright test automation suite
 ├── defects/
 │   └── DEF-001.md              # Sample defect report (accessibility issue)
@@ -140,6 +153,7 @@ qa-swaglabs-smoke-regression/
 ### Strategy
 
 This project follows a **risk-based testing approach**, focusing on:
+
 1. **Critical User Journeys**: Login, product selection, cart management, checkout
 2. **High-Impact Scenarios**: Authentication failures, data validation, session handling
 3. **Smoke Test Level**: Essential functionality verification suitable for build validation
@@ -166,6 +180,7 @@ View the latest pipeline results: [GitHub Actions](https://github.com/Angelgx298
 ## 🐛 Defect Management
 
 This repository includes a sample defect report ([DEF-001](./defects/DEF-001.md)) demonstrating:
+
 - Professional defect documentation structure
 - Accessibility testing awareness (WCAG compliance)
 - Clear reproduction steps and evidence

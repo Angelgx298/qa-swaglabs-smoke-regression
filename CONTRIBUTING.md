@@ -25,12 +25,14 @@ This project is a comprehensive automated smoke test suite for the [Sauce Demo](
 ## 📝 Coding Standards
 
 ### TypeScript & Playwright
+
 - **Strict Typing**: Avoid `any`. Define interfaces for data structures.
 - **Page Object Model (POM)**: All selectors and page interactions must be encapsulated in Page Objects (if applicable) or clearly defined constants.
 - **Selectors**: Use resilient selectors (e.g., `getByRole`, `getByText`) over CSS chains whenever possible.
 - **Linting**: Ensure code passes linting rules.
 
 ### Test Case Design
+
 - **Independence**: Tests must run in isolation. Use `beforeEach` for setup.
 - **Naming**: Follow the pattern `SMK-XXX: Description`.
 - **Assertions**: Use Playwright's web-first assertions (e.g., `await expect(locator).toBeVisible()`).
@@ -57,9 +59,11 @@ pnpm test
 ## 🐛 Reporting Bugs
 
 If you find an issue with the test suite or documentation, please open an issue with:
+
 - Description of the problem
 - Steps to reproduce
 - Expected vs. actual behavior
 
 ---
-*Happy Testing!*
+
+_Happy Testing!_
