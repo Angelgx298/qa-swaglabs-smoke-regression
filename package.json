@@ -22,7 +22,7 @@
     "portfolio"
   ],
   "author": "Ángel Ruiz Nadal <angelruiznadal@gmail.com>",
-  "license": "ISC",
+  "license": "MIT",
   "packageManager": "pnpm@10.20.0",
   "devDependencies": {
     "@playwright/test": "^1.56.1",
