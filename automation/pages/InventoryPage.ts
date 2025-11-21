@@ -24,14 +24,12 @@ export class InventoryPage {
   async verifyLoaded() {
     await expect(this.page).toHaveURL(/.*inventory/, { timeout: 15000 });
     await expect(this.inventoryList).toBeVisible({ timeout: 15000 });
-    await this.page.waitForLoadState("networkidle");
   }
 
   async sort(option: "az" | "za" | "lohi" | "hilo") {
-    await expect(this.sortContainer).toBeVisible({ timeout: 15000 });
     await this.sortContainer.selectOption(option);
-    // Small wait for sort animation/DOM update
-    await this.page.waitForTimeout(500);
+    // Wait for sorting to complete by checking the first item is visible
+    await this.inventoryItemNames.first().waitFor({ state: "visible" });
   }
 
   async addItemToCart(index: number = 0) {
