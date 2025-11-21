@@ -1,6 +1,9 @@
-import { test, expect, type Page } from "@playwright/test";
+import { test, expect } from "@playwright/test";
+import { LoginPage } from "./pages/LoginPage";
+import { InventoryPage } from "./pages/InventoryPage";
+import { CartPage } from "./pages/CartPage";
+import { CheckoutPage } from "./pages/CheckoutPage";
 
-const BASE_URL = "https://www.saucedemo.com/";
 const CREDENTIALS = {
   standard: {
     username: process.env.SAUCE_USER || "standard_user",
@@ -12,17 +15,6 @@ const CREDENTIALS = {
   },
 };
 
-const SELECTORS = {
-  inventory: ".inventory_list",
-  inventoryItem: ".inventory_item",
-  inventoryItemName: ".inventory_item_name",
-  inventoryItemPrice: ".inventory_item_price",
-  sortContainer: ".product_sort_container",
-  cartBadge: ".shopping_cart_badge",
-  cartLink: ".shopping_cart_link",
-  cartItem: ".cart_item",
-} as const;
-
 const CHECKOUT_DATA = {
   firstName: "Test",
   lastName: "User",
@@ -31,164 +23,151 @@ const CHECKOUT_DATA = {
 
 test.setTimeout(45_000);
 
-async function loginAndWaitInventory(
-  page: Page,
-  username = CREDENTIALS.standard.username,
-  password = CREDENTIALS.standard.password
-): Promise<void> {
-  await page.goto(BASE_URL, { waitUntil: "domcontentloaded" });
-  await page.getByPlaceholder("Username").fill(username);
-  await page.getByPlaceholder("Password").fill(password);
-  await page.getByRole("button", { name: "Login" }).click();
-  await expect(page).toHaveURL(/.*inventory/, { timeout: 15000 });
-  await expect(page.locator(SELECTORS.inventory)).toBeVisible({
-    timeout: 15000,
-  });
-  await page.waitForLoadState("networkidle");
-}
-
-async function addFirstItemToCart(page: Page): Promise<void> {
-  await page
-    .locator(SELECTORS.inventoryItem)
-    .first()
-    .getByRole("button", { name: /add to cart/i })
-    .click();
-}
-
 test("SMK-001: Login with valid user lands on inventory", async ({ page }) => {
-  await loginAndWaitInventory(page);
-  await expect(page).toHaveURL(/.*inventory/);
-  await expect(page.locator(SELECTORS.inventory)).toBeVisible();
+  const loginPage = new LoginPage(page);
+  const inventoryPage = new InventoryPage(page);
+
+  await loginPage.goto();
+  await loginPage.login(CREDENTIALS.standard.username, CREDENTIALS.standard.password);
+  await inventoryPage.verifyLoaded();
 });
 
 test("SMK-002: Login with locked_out_user shows error", async ({ page }) => {
-  await page.goto(BASE_URL, { waitUntil: "domcontentloaded" });
-  await page.getByPlaceholder("Username").fill(CREDENTIALS.locked.username);
-  await page.getByPlaceholder("Password").fill(CREDENTIALS.locked.password);
-  await page.getByRole("button", { name: "Login" }).click();
-  await expect(page.getByText("Epic sadface")).toBeVisible();
-  await expect(page).toHaveURL(BASE_URL);
+  const loginPage = new LoginPage(page);
+
+  await loginPage.goto();
+  await loginPage.login(CREDENTIALS.locked.username, CREDENTIALS.locked.password);
+  await expect(await loginPage.getErrorMessage()).toBeVisible();
 });
 
-test("SMK-003: Sort by price low to high shows cheapest first", async ({
-  page,
-}) => {
-  await loginAndWaitInventory(page);
+test("SMK-003: Sort by price low to high shows cheapest first", async ({ page }) => {
+  const loginPage = new LoginPage(page);
+  const inventoryPage = new InventoryPage(page);
 
-  const sortSelect = page.locator(SELECTORS.sortContainer);
-  await expect(sortSelect).toBeVisible({ timeout: 15000 });
-  await sortSelect.selectOption("lohi");
-  await page.waitForTimeout(500);
+  await loginPage.goto();
+  await loginPage.login(CREDENTIALS.standard.username, CREDENTIALS.standard.password);
+  await inventoryPage.verifyLoaded();
 
-  const pricesText = await page
-    .locator(SELECTORS.inventoryItemPrice)
-    .allTextContents();
+  await inventoryPage.sort("lohi");
+
+  const pricesText = await inventoryPage.inventoryItemPrices.allTextContents();
   const prices = pricesText.map((p) => parseFloat(p.replace("$", "")));
   const sortedPrices = [...prices].sort((a, b) => a - b);
 
   expect(prices).toEqual(sortedPrices);
 });
 
-test("SMK-004: Sort by name Z to A shows reverse alphabetical", async ({
-  page,
-}) => {
-  await loginAndWaitInventory(page);
+test("SMK-004: Sort by name Z to A shows reverse alphabetical", async ({ page }) => {
+  const loginPage = new LoginPage(page);
+  const inventoryPage = new InventoryPage(page);
 
-  const sortSelect = page.locator(SELECTORS.sortContainer);
-  await expect(sortSelect).toBeVisible({ timeout: 15000 });
-  await sortSelect.selectOption("za");
-  await page.waitForTimeout(500);
+  await loginPage.goto();
+  await loginPage.login(CREDENTIALS.standard.username, CREDENTIALS.standard.password);
+  await inventoryPage.verifyLoaded();
 
-  const names = await page
-    .locator(SELECTORS.inventoryItemName)
-    .allTextContents();
+  await inventoryPage.sort("za");
+
+  const names = await inventoryPage.inventoryItemNames.allTextContents();
   const sortedNames = [...names].sort().reverse();
 
   expect(names).toEqual(sortedNames);
 });
 
 test("SMK-005: Add to cart from list increments badge", async ({ page }) => {
-  await loginAndWaitInventory(page);
-  await addFirstItemToCart(page);
+  const loginPage = new LoginPage(page);
+  const inventoryPage = new InventoryPage(page);
 
-  const badge = page.locator(SELECTORS.cartBadge);
-  await expect(badge).toHaveText("1");
+  await loginPage.goto();
+  await loginPage.login(CREDENTIALS.standard.username, CREDENTIALS.standard.password);
+  await inventoryPage.verifyLoaded();
+
+  await inventoryPage.addItemToCart(0);
+  await expect(inventoryPage.cartBadge).toHaveText("1");
 });
 
-test("SMK-006: Add to cart from PDP shows product in cart", async ({
-  page,
-}) => {
-  await loginAndWaitInventory(page);
+test("SMK-006: Add to cart from PDP shows product in cart", async ({ page }) => {
+  const loginPage = new LoginPage(page);
+  const inventoryPage = new InventoryPage(page);
 
-  const firstItem = page.locator(SELECTORS.inventoryItem).first();
-  const productName = await firstItem
-    .locator(SELECTORS.inventoryItemName)
-    .textContent();
-  const productPrice = await firstItem
-    .locator(SELECTORS.inventoryItemPrice)
-    .textContent();
+  await loginPage.goto();
+  await loginPage.login(CREDENTIALS.standard.username, CREDENTIALS.standard.password);
+  await inventoryPage.verifyLoaded();
 
-  await firstItem.locator(SELECTORS.inventoryItemName).click();
-  await expect(page).toHaveURL(/.*inventory-item/);
+  // Capture details of first item
+  const firstItemName = await inventoryPage.inventoryItemNames.first().textContent();
+  const firstItemPrice = await inventoryPage.inventoryItemPrices.first().textContent();
+
+  // Go to PDP and add to cart
+  await inventoryPage.openProductDetails(0);
   await page.getByRole("button", { name: /add to cart/i }).click();
 
-  await page.locator(SELECTORS.cartLink).click();
-  await expect(page).toHaveURL(/.*cart/);
-  await expect(page.locator(".cart_item_label")).toContainText(productName);
-  await expect(page.locator(SELECTORS.inventoryItemPrice)).toContainText(
-    productPrice
-  );
+  // Go to cart
+  await inventoryPage.goToCart();
+  
+  const cartPage = new CartPage(page);
+  await cartPage.verifyLoaded();
+  
+  await expect(page.locator(".cart_item_label")).toContainText(firstItemName!);
+  await expect(page.locator(".inventory_item_price")).toContainText(firstItemPrice!);
 });
 
 test("SMK-007: Checkout happy path shows confirmation", async ({ page }) => {
-  await loginAndWaitInventory(page);
-  await addFirstItemToCart(page);
-  await page.locator(SELECTORS.cartLink).click();
+  const loginPage = new LoginPage(page);
+  const inventoryPage = new InventoryPage(page);
+  const cartPage = new CartPage(page);
+  const checkoutPage = new CheckoutPage(page);
 
-  await page.getByRole("button", { name: "Checkout" }).click();
-  await expect(page).toHaveURL(/.*checkout-step-one/);
+  await loginPage.goto();
+  await loginPage.login(CREDENTIALS.standard.username, CREDENTIALS.standard.password);
+  await inventoryPage.addItemToCart(0);
+  await inventoryPage.goToCart();
 
-  await page.getByPlaceholder("First Name").fill(CHECKOUT_DATA.firstName);
-  await page.getByPlaceholder("Last Name").fill(CHECKOUT_DATA.lastName);
-  await page.getByPlaceholder("Zip/Postal Code").fill(CHECKOUT_DATA.zipCode);
-  await page.getByRole("button", { name: "Continue" }).click();
-
-  await expect(page).toHaveURL(/.*checkout-step-two/);
-  await page.getByRole("button", { name: "Finish" }).click();
-
-  await expect(page).toHaveURL(/.*checkout-complete/);
-  await expect(page.getByText("Thank you for your order")).toBeVisible();
+  await cartPage.proceedToCheckout();
+  await checkoutPage.fillInformation(
+    CHECKOUT_DATA.firstName,
+    CHECKOUT_DATA.lastName,
+    CHECKOUT_DATA.zipCode
+  );
+  await checkoutPage.finishCheckout();
+  await checkoutPage.verifyOrderComplete();
 });
 
-test("SMK-008: Cancel checkout returns to cart with cart preserved", async ({
-  page,
-}) => {
-  await loginAndWaitInventory(page);
-  await addFirstItemToCart(page);
+test("SMK-008: Cancel checkout returns to cart with cart preserved", async ({ page }) => {
+  const loginPage = new LoginPage(page);
+  const inventoryPage = new InventoryPage(page);
+  const cartPage = new CartPage(page);
+  const checkoutPage = new CheckoutPage(page);
 
-  const badge = page.locator(SELECTORS.cartBadge);
-  await expect(badge).toHaveText("1");
+  await loginPage.goto();
+  await loginPage.login(CREDENTIALS.standard.username, CREDENTIALS.standard.password);
+  await inventoryPage.addItemToCart(0);
+  
+  await expect(inventoryPage.cartBadge).toHaveText("1");
 
-  await page.locator(SELECTORS.cartLink).click();
-  await page.getByRole("button", { name: "Checkout" }).click();
-  await page.getByRole("button", { name: "Cancel" }).click();
+  await inventoryPage.goToCart();
+  await cartPage.proceedToCheckout();
+  await checkoutPage.cancelCheckout();
 
-  await expect(page).toHaveURL(/.*cart/);
-  await expect(badge).toHaveText("1");
-  await expect(page.locator(SELECTORS.cartItem)).toHaveCount(1);
+  await cartPage.verifyLoaded();
+  await expect(inventoryPage.cartBadge).toHaveText("1");
+  await expect(cartPage.cartItems).toHaveCount(1);
 });
 
-test("SMK-009: Logout returns to login and invalidates session", async ({
-  page,
-}) => {
-  await loginAndWaitInventory(page);
+test("SMK-009: Logout returns to login and invalidates session", async ({ page }) => {
+  const loginPage = new LoginPage(page);
+  const inventoryPage = new InventoryPage(page);
+
+  await loginPage.goto();
+  await loginPage.login(CREDENTIALS.standard.username, CREDENTIALS.standard.password);
+  await inventoryPage.verifyLoaded();
 
   await page.getByRole("button", { name: "Open Menu" }).click();
   await page.getByRole("link", { name: "Logout" }).click();
 
-  await expect(page).toHaveURL(BASE_URL);
-  await expect(page.getByPlaceholder("Username")).toBeVisible();
+  await expect(page).toHaveURL("https://www.saucedemo.com/");
+  await expect(loginPage.usernameInput).toBeVisible();
 
-  await page.goto(`${BASE_URL}inventory.html`);
-  await expect(page).toHaveURL(BASE_URL);
+  // Verify session invalidation
+  await page.goto("https://www.saucedemo.com/inventory.html");
+  await expect(page).toHaveURL("https://www.saucedemo.com/");
 });
