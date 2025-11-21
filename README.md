@@ -186,7 +186,7 @@ This project showcases the following QA engineering competencies:
 
 ## 👤 Author
 
-**Ángel Ruiz Nadal**  
+**Ángel Ruiz Nadal**
 Junior QA Engineer
 
 📨 [angelruiznadal@gmail.com](mailto:angelruiznadal@gmail.com)  
